@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
+  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +13,6 @@
   "dependencies": {
     "@slack/bolt": "^3.11.3",
     "cron": "^2.0.0",
-    "dotenv": "^16.0.1",
-    "type": "module"
+    "dotenv": "^16.0.1"
   }
 }
