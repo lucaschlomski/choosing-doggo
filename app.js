@@ -52,6 +52,7 @@ async function post_to_channel(channel_id, user_group, message) {
   });
 };
 
+// update message
 async function update_message(user_group, message, message_channel, message_ts) {
   const lucky_one = await find_lucky_one(user_group);
   message[0].fields[0].text += lucky_one;
@@ -64,12 +65,20 @@ async function update_message(user_group, message, message_channel, message_ts) 
   });
 };
 
-post_to_channel(channel.luca_test, group.sales, m_sales);
+//post_to_channel(channel.luca_test, group.sales, m_sales);
 
+//button action sales message
 app.action("sales_button", ({ack, body}) => {
   ack();
   console.log(body.message);
   update_message(group.sales, body.message.blocks, body.container.channel_id, body.container.message_ts);
+});
+
+//button action customer success message
+app.action("customer_success_button", ({ack, body}) => {
+  ack();
+  console.log(body.message);
+  update_message(group.customer_success, body.message.blocks, body.container.channel_id, body.container.message_ts);
 });
 
 // cron Sales
@@ -80,7 +89,7 @@ const cron_sales = new cron("30 13 * * 5", () => {
 
 
 // cron Customer Success
-const cron_customer_success = new cron("30 13 * * 5", () => {
+const cron_customer_success = new cron("16 2 * * *", () => {
   post_to_channel(channel.luca_test, group.customer_success, m_customer_success),
   console.log("*running cron*")
 },null, true, 'Europe/Berlin');
