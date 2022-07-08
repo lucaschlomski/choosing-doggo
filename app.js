@@ -58,7 +58,7 @@ async function update_message(user_group, message, message_channel, message_ts) 
   if( check == "~" ) {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.id}>`;
   } else {
-    message[0].fields[0].text = /*message[0].fields[0].text.slice(0, 1) +*/ "~" + message[0].fields[0].text.slice(0) + "~ " + `<@${lucky_one.id}>`;
+    message[0].fields[0].text = /*message[0].fields[0].text.slice(0, 1) +*/ ">~" + message[0].fields[0].text.slice(0) + "~ " + `<@${lucky_one.id}>`;
   };
   message[0].accessory.image_url = lucky_one.image;
   app.client.chat.update({
