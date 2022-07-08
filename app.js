@@ -43,10 +43,22 @@ async function find_lucky_one(user_group) {
 // post lucky user to channel
 async function post_to_channel(channel_id, user_group, message) {
   const lucky_one = await find_lucky_one(user_group);
-  message[0].fields[0].text += `~<@luca.schlomski>~`;
+  message[0].fields[0].text += lucky_one;
   message[0].accessory.image_url += user_image;
   app.client.chat.postMessage({
     channel: channel_id,
+    text: lucky_one + " was selcted",
+    blocks: message
+  });
+};
+
+async function update_message(user_group, message, message_channel, message_ts) {
+  const lucky_one = await find_lucky_one(user_group);
+  message[0].fields[0].text += lucky_one;
+  message[0].accessory.image_url = user_image;
+  app.client.chat.update({
+    channel: message_channel,
+    ts: message_ts,
     text: lucky_one + " was selcted",
     blocks: message
   });
@@ -56,18 +68,19 @@ post_to_channel(channel.luca_test, group.sales, m_sales);
 
 app.action("sales_button", ({ack, body}) => {
   ack();
-  console.log(body);
+  console.log(body.message);
+  update_message(group.sales, body.message.blocks, body.container.channel_id, body.container.message_ts);
 });
 
 // cron Sales
-const cron_sales = new cron("45 13 * * 5", () => {
+const cron_sales = new cron("30 13 * * 5", () => {
   post_to_channel(channel.luca_test, group.customer_success, m_sales),
   console.log("*running cron*")
 },null, true, 'Europe/Berlin');
 
 
 // cron Customer Success
-const cron_customer_success = new cron("45 13 * * 5", () => {
+const cron_customer_success = new cron("30 13 * * 5", () => {
   post_to_channel(channel.luca_test, group.customer_success, m_customer_success),
   console.log("*running cron*")
 },null, true, 'Europe/Berlin');
