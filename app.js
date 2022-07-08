@@ -54,11 +54,11 @@ async function post_to_channel(channel_id, user_group, message) {
 // update message
 async function update_message(user_group, message, message_channel, message_ts) {
   const lucky_one = await find_lucky_one(user_group);
-  var check = message[0].fields[0].text.charAt(0);
+  var check = message[0].fields[0].text.charAt(4);
   if( check == "~" ) {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.id}>`;
   } else {
-    message[0].fields[0].text = /*message[0].fields[0].text.slice(0, 1) +*/ ">~" + message[0].fields[0].text.slice(0) + "~ " + `<@${lucky_one.id}>`;
+    message[0].fields[0].text = message[0].fields[0].text.slice(0, 4) + "~" + message[0].fields[0].text.slice(0) + "~ " + `<@${lucky_one.id}>`;
   };
   message[0].accessory.image_url = lucky_one.image;
   app.client.chat.update({
