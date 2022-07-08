@@ -24,8 +24,6 @@ const group = {
   biz_dev: "SMY88M352"
 };
 
-var user_image;
-
 // return random username from selcted usergroup
 async function find_lucky_one(user_group) {
   const user_list = await app.client.usergroups.users.list({
@@ -36,18 +34,23 @@ async function find_lucky_one(user_group) {
     user: user_list.users[random]
   });
   user_image = result.user.profile.image_192;
-  return result.user.real_name;
+  return lucky_one = {name: result.user.name, real_name: result.user.real_name, image: result.user.profile.image_192};
 };
 
 
 // post lucky user to channel
 async function post_to_channel(channel_id, user_group, message) {
   const lucky_one = await find_lucky_one(user_group);
-  message[0].fields[0].text += lucky_one;
-  message[0].accessory.image_url += user_image;
+  var check = message[0].fields[0].text.charAt(1)
+  if( check == "~" ) {
+      message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.name}>`;
+  } else {
+      message[0].fields[0].text = message[0].fields[0].text.slice(0, 1) + "~" + message[0].fields[0].text.slice(1) + "~ " + `<@${lucky_one.name}>`;
+  };
+  message[0].accessory.image_url = lucky_one.image;
   app.client.chat.postMessage({
     channel: channel_id,
-    text: lucky_one + " was selcted",
+    text: lucky_one.real_name + " was selcted!",
     blocks: message
   });
 };
@@ -55,12 +58,12 @@ async function post_to_channel(channel_id, user_group, message) {
 // update message
 async function update_message(user_group, message, message_channel, message_ts) {
   const lucky_one = await find_lucky_one(user_group);
-  message[0].fields[0].text = ">" + lucky_one;
-  message[0].accessory.image_url = user_image;
+  message[0].fields[0].text = ">" + `<@${lucky_one.name}>`;
+  message[0].accessory.image_url = lucky_one.image;
   app.client.chat.update({
     channel: message_channel,
     ts: message_ts,
-    text: lucky_one + " was selcted",
+    text: lucky_one.real_name + " was selcted!",
     blocks: message
   });
 };
