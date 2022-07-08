@@ -53,6 +53,7 @@ async function post_to_channel(channel_id, user_group, message) {
 // update message
 async function update_message(user_group, message, message_channel, message_ts) {
   const lucky_one = await find_lucky_one(user_group);
+  var check = message[0].fields[0].text.charAt(1);
   if( check == "~" ) {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.name}>`;
   } else {
