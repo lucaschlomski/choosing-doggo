@@ -73,7 +73,7 @@ post_to_channel(channel.luca_test, group.sales, m_sales);
 //button action sales message
 app.action("sales_button", ({ack, body}) => {
   ack();
-  console.log(body.message);
+  console.log(body.message.blocks);
   update_message(group.sales, body.message.blocks, body.container.channel_id, body.container.message_ts);
 });
 
