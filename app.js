@@ -33,8 +33,13 @@ async function find_lucky_one(user_group) {
   const result = await app.client.users.info({
     user: user_list.users[random]
   });
-  user_image = result.user.profile.image_192;
-  return lucky_one = {id: result.user.id, real_name: result.user.real_name, image: result.user.profile.image_192};
+  const user_presence = await app.client.users.getPresence(result.user.id);
+  console.log(user_active);
+  if (user_presence.presence == "active") {
+    return lucky_one = {id: result.user.id, real_name: result.user.real_name, image: result.user.profile.image_192}
+  } else {
+    find_lucky_one(user_group)
+  };
 };
 
 
