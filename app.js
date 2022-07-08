@@ -38,7 +38,7 @@ async function find_lucky_one(user_group) {
 };
 
 
-// post lucky user to channel
+// post message
 async function post_to_channel(channel_id, user_group, message) {
   const lucky_one = await find_lucky_one(user_group);
   message[0].fields[0].text += `<@${lucky_one.id}>`;
@@ -48,6 +48,7 @@ async function post_to_channel(channel_id, user_group, message) {
     text: lucky_one.real_name + " was selcted!",
     blocks: message
   });
+  console.log(message[0].fields);
 };
 
 // update message
