@@ -54,11 +54,11 @@ async function post_to_channel(channel_id, user_group, message) {
 // update message
 async function update_message(user_group, message, message_channel, message_ts) {
   const lucky_one = await find_lucky_one(user_group);
-  var check = message[0].fields[0].text.charAt(1);
+  var check = message[0].fields[0].text.charAt(0);
   if( check == "~" ) {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.id}>`;
   } else {
-    message[0].fields[0].text = message[0].fields[0].text.slice(0, 1) + "~" + message[0].fields[0].text.slice(1) + "~ " + `<@${lucky_one.id}>`;
+    message[0].fields[0].text = /*message[0].fields[0].text.slice(0, 1) +*/ "~" + message[0].fields[0].text.slice(0) + "~ " + `<@${lucky_one.id}>`;
   };
   message[0].accessory.image_url = lucky_one.image;
   app.client.chat.update({
@@ -72,15 +72,15 @@ async function update_message(user_group, message, message_channel, message_ts) 
 post_to_channel(channel.luca_test, group.sales, m_sales);
 
 //button action sales message
-app.action("sales_button", ({ack, body}) => {
-  ack();
+app.action("sales_button", async ({ack, body}) => {
+  await ack();
   console.log(body.message.blocks[0].fields);
   update_message(group.sales, body.message.blocks, body.container.channel_id, body.container.message_ts);
 });
 
 //button action customer success message
-app.action("customer_success_button", ({ack, body}) => {
-  ack();
+app.action("customer_success_button", async ({ack, body}) => {
+  await ack();
   console.log(body.message);
   update_message(group.customer_success, body.message.blocks, body.container.channel_id, body.container.message_ts);
 });
