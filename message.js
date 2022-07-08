@@ -58,7 +58,7 @@ m_customer_success = [
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "*Links:*   <https://www.youtube.com/watch?v=dQw4w9WgXcQ|Dashboard> | <https://www.youtube.com/watch?v=dQw4w9WgXcQ|Notizen>"
+            "text": "*Links:*   <https://datastudio.google.com/u/0/reporting/c43b1c4b-1257-4c8d-81dd-0ac2ac1b4b70/page/p_ucdyi18jwc|Dashboard> | <https://www.youtube.com/watch?v=dQw4w9WgXcQ|Notizen>"
         },
         "accessory": {
             "type": "button",

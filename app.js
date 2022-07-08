@@ -82,16 +82,16 @@ app.action("customer_success_button", ({ack, body}) => {
 });
 
 // cron Sales
-const cron_sales = new cron("30 13 * * 5", () => {
-  post_to_channel(channel.sales, group.customer_success, m_sales),
-  console.log("*running cron*")
+const cron_sales = new cron("45 13 * * 5", () => {
+  post_to_channel(channel.sales, group.sales, m_sales),
+  console.log("*running cron sales*")
 },null, true, 'Europe/Berlin');
 
 
 // cron Customer Success
-const cron_customer_success = new cron("30 13 * * 5", () => {
+const cron_customer_success = new cron("45 13 * * 5", () => {
   post_to_channel(channel.customer_success, group.customer_success, m_customer_success),
-  console.log("*running cron*")
+  console.log("*running cron customer success*")
 },null, true, 'Europe/Berlin');
 
 
