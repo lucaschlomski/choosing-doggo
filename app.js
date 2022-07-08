@@ -41,7 +41,7 @@ async function find_lucky_one(user_group) {
 // post lucky user to channel
 async function post_to_channel(channel_id, user_group, message) {
   const lucky_one = await find_lucky_one(user_group);
-  message[0].fields[0].text = `<@${lucky_one.name}>`;
+  message[0].fields[0].text + `<@${lucky_one.name}>`;
   message[0].accessory.image_url = lucky_one.image;
   app.client.chat.postMessage({
     channel: channel_id,
