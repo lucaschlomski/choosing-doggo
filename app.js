@@ -30,11 +30,11 @@ async function find_lucky_one(user_group) {
   const user_list = await app.client.usergroups.users.list({
     usergroup: user_group
   });
-  user_list.users.forEach(element => {
-    const presence = app.client.users.getPresence({
+  user_list.users.forEach(element, async => {
+    const presence = await app.client.users.getPresence({
       user: element
     });
-    console.log(element + ": " + presence);
+    console.log(element + ":\n" + presence);
     if(presence.presence != "active") {
       user_list.users.splice(user_list.users.indexOf(element), 1)
     }
