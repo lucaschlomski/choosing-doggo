@@ -34,10 +34,12 @@ async function find_lucky_one(user_group) {
     const presence = app.client.users.getPresence({
       user: element
     });
+    console.log(element + ": " + presence);
     if(presence.presence != "active") {
       user_list.users.splice(user_list.users.indexOf(element), 1)
     }
   });
+  console.log(user_list.users);
   const random = Math.floor(Math.random() * user_list.users.length);
   const result = await app.client.users.info({
     user: user_list.users[random]
