@@ -35,7 +35,7 @@ async function find_lucky_one(user_group) {
       user: element
     });
     if(presence.presence != "active") {
-      user_list.splice(user_list.users.indexOf(element), 1)
+      user_list.users.splice(user_list.users.indexOf(element), 1)
     }
   });
   const random = Math.floor(Math.random() * user_list.users.length);
