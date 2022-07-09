@@ -24,24 +24,25 @@ const group = {
   biz_dev: "SMY88M352"
 };
 
+
 // return random username from selcted usergroup
 async function find_lucky_one(user_group) {
   const user_list = await app.client.usergroups.users.list({
     usergroup: user_group
   });
+  user_list.forEach(element => {
+    const presence = await app.client.users.getPresence({
+      user: element
+    });
+    if(presence.presence != "active") {
+      user_list.splice(user_list.indexOf(element), 1)
+    }
+  });
   const random = Math.floor(Math.random() * user_list.users.length);
   const result = await app.client.users.info({
     user: user_list.users[random]
   });
-  const user_presence = await app.client.users.getPresence({
-    user: result.user.id
-  });
-  console.log(user_presence);
-  if (user_presence.presence == "active") {
-    return lucky_one = {id: result.user.id, real_name: result.user.real_name, image: result.user.profile.image_192}
-  } else {
-    find_lucky_one(user_group)
-  };
+  return lucky_one = {id: result.user.id, real_name: result.user.real_name, image: result.user.profile.image_192}
 };
 
 
