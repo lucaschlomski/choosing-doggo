@@ -31,7 +31,7 @@ async function find_lucky_one(user_group) {
     usergroup: user_group
   });
   user_list.forEach(element => {
-    const presence = await app.client.users.getPresence({
+    const presence = app.client.users.getPresence({
       user: element
     });
     if(presence.presence != "active") {
