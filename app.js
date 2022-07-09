@@ -30,7 +30,7 @@ async function find_lucky_one(user_group) {
   const user_list = await app.client.usergroups.users.list({
     usergroup: user_group
   });
-  user_list.users.forEach(element, async (element) => {
+  user_list.users.forEach(async (element) => {
     const presence = await app.client.users.getPresence({
       user: element
     });
