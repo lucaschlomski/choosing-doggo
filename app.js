@@ -58,7 +58,6 @@ async function post_to_channel(channel_id, user_group, message) {
     text: lucky_one.real_name + " was selcted!",
     blocks: message
   });
-  console.log(message[0].fields);
 };
 
 // update message
@@ -84,14 +83,12 @@ post_to_channel(channel.luca_test, group.sales, m_sales);
 //button action sales message
 app.action("sales_button", async ({ack, body}) => {
   await ack();
-  console.log(body.message.blocks[0].fields);
   update_message(group.sales, body.message.blocks, body.container.channel_id, body.container.message_ts);
 });
 
 //button action customer success message
 app.action("customer_success_button", async ({ack, body}) => {
   await ack();
-  console.log(body.message);
   update_message(group.customer_success, body.message.blocks, body.container.channel_id, body.container.message_ts);
 });
 
