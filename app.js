@@ -53,7 +53,6 @@ async function find_lucky_one(user_group) {
   };
 };
 
-
 // post message
 async function post_to_channel(channel_id, user_group, message) {
   const lucky_one = await find_lucky_one(user_group);

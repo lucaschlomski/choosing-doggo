@@ -27,7 +27,7 @@ m_sales = [
             "type": "button",
             "text": {
                 "type": "plain_text",
-                "text": "nochmal versuchen",
+                "text": "pick someone else",
                 "emoji": true
             },
             "action_id": "sales_button"
@@ -64,7 +64,7 @@ m_customer_success = [
             "type": "button",
             "text": {
                 "type": "plain_text",
-                "text": "nochmal versuchen",
+                "text": "pick someone else",
                 "emoji": true
             },
             "action_id": "customer_success_button"
