@@ -27,24 +27,30 @@ const group = {
 
 // return random username from selcted usergroup
 async function find_lucky_one(user_group) {
-  const user_list = await app.client.usergroups.users.list({
+  const userList = await app.client.usergroups.users.list({
     usergroup: user_group
-  });
-  user_list.users.forEach(async (element) => {
-    const presence = await app.client.users.getPresence({
+  })
+  const presence = await Promise.all(userList.users.map(async (element) => {
+    var currentPresence =  await app.client.users.getPresence({
       user: element
     });
-    console.log(element + ":\n" + presence);
-    if(presence.presence != "active") {
-      user_list.users.splice(user_list.users.indexOf(element), 1)
+    return {
+      user: element,
+      presence: currentPresence.presence
     }
-  });
-  console.log(user_list.users);
-  const random = Math.floor(Math.random() * user_list.users.length);
+  }))
+  const filteredUserList = presence.filter(element => {
+    return element.presence !== "away"
+  })
+  const random = Math.floor(Math.random() * filteredUserList.length);
   const result = await app.client.users.info({
-    user: user_list.users[random]
+    user: filteredUserList[random].user
   });
-  return lucky_one = {id: result.user.id, real_name: result.user.real_name, image: result.user.profile.image_192}
+  return lucky_one = {
+    id: result.user.id,
+    real_name: result.user.real_name,
+    image: result.user.profile.image_192
+  }
 };
 
 
