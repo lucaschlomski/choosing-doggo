@@ -35,7 +35,7 @@ m_sales = [
     }
 ];
 
-m_customer_success = [
+m_customerSuccess = [
     {
         "type": "section",
         "text": {
@@ -67,7 +67,7 @@ m_customer_success = [
                 "text": "pick someone else",
                 "emoji": true
             },
-            "action_id": "customer_success_button"
+            "action_id": "customerSuccess_button"
         }
     }
 ];

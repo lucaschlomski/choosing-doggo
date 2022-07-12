@@ -1,118 +1,119 @@
-require('dotenv').config();
-require('./message');
-const { App, AwsLambdaReceiver } = require('@slack/bolt');
-const cron = require("cron").CronJob;
+require('dotenv').config()
+require('./message')
+const { App, AwsLambdaReceiver } = require('@slack/bolt')
+const cron = require("cron").CronJob
 
-
-// Initializes your app with your bot token and signing secret
+// initializes the app with your bot token and signing secret
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET
-});
+})
 
 // array of channel IDs
 const channel = {
   luca_test: "GQVLQ43A8",
   sales: "CF5G5BPJN",
-  customer_success: "C026T9RKNCQ"
-};
+  customerSuccess: "C026T9RKNCQ",
+  marketing: "SJ5U3K2DC"
+}
 
 // array of usergroup IDs
 const group = {
   sales: "S027JT5CBQW",
-  customer_success: "S027RRUF1M1",
-  biz_dev: "SMY88M352"
-};
+  customerSuccess: "S027RRUF1M1",
+  bizDev: "SMY88M352"
+}
 
-
-// return random username from selcted usergroup
-async function find_lucky_one(user_group) {
+// return random username from selcted usergroup and check their slack presence
+async function find_lucky_one(userGroup) {
   const userList = await app.client.usergroups.users.list({
-    usergroup: user_group
-  });
+    usergroup: userGroup
+  })
   const presence = await Promise.all(userList.users.map(async (element) => {
     var currentPresence =  await app.client.users.getPresence({
       user: element
-    });
+    })
     return {
       user: element,
       presence: currentPresence.presence
-    };
-  }));
+    }
+  }))
   const filteredUserList = presence.filter(element => {
     return element.presence !== "away"
-  });
-  const random = Math.floor(Math.random() * filteredUserList.length);
+  })
+  const random = Math.floor(Math.random() * filteredUserList.length)
   const result = await app.client.users.info({
     user: filteredUserList[random].user
-  });
+  })
   return lucky_one = {
     id: result.user.id,
     real_name: result.user.real_name,
     image: result.user.profile.image_192
-  };
-};
+  }
+}
 
 // post message
-async function post_to_channel(channel_id, user_group, message) {
-  const lucky_one = await find_lucky_one(user_group);
-  message[0].fields[0].text += `<@${lucky_one.id}>`;
-  message[0].accessory.image_url = lucky_one.image;
+async function post_to_channel(channel_id, userGroup, message) {
+  const lucky_one = await find_lucky_one(userGroup)
+  message[0].fields[0].text += `<@${lucky_one.id}>`
+  message[0].accessory.image_url = lucky_one.image
   app.client.chat.postMessage({
     channel: channel_id,
     text: lucky_one.real_name + " was selcted!",
     blocks: message
-  });
-};
+  })
+}
 
 // update message
-async function update_message(user_group, message, message_channel, message_ts) {
-  const lucky_one = await find_lucky_one(user_group);
-  var check = message[0].fields[0].text.charAt(4);
+async function update_message(userGroup, message, message_channel, message_ts) {
+  const lucky_one = await find_lucky_one(userGroup)
+  var check = message[0].fields[0].text.charAt(4)
   if( check == "~" ) {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.id}>`
   } else {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, 4) + "~" + message[0].fields[0].text.slice(4) + "~ " + `<@${lucky_one.id}>`
-  };
-  message[0].accessory.image_url = lucky_one.image;
+  }
+  message[0].accessory.image_url = lucky_one.image
   app.client.chat.update({
     channel: message_channel,
     ts: message_ts,
     text: lucky_one.real_name + " was selcted!",
     blocks: message
-  });
-};
-
-post_to_channel(channel.luca_test, group.sales, m_sales);
+  })
+}
 
 //button action sales message
 app.action("sales_button", async ({ack, body}) => {
-  await ack();
-  update_message(group.sales, body.message.blocks, body.container.channel_id, body.container.message_ts);
-});
+  await ack()
+  update_message(group.sales, body.message.blocks, body.container.channel_id, body.container.message_ts)
+})
 
 //button action customer success message
-app.action("customer_success_button", async ({ack, body}) => {
-  await ack();
-  update_message(group.customer_success, body.message.blocks, body.container.channel_id, body.container.message_ts);
-});
+app.action("customerSuccess_button", async ({ack, body}) => {
+  await ack()
+  update_message(group.customerSuccess, body.message.blocks, body.container.channel_id, body.container.message_ts)
+})
 
 // cron Sales
 const cron_sales = new cron("45 13 * * 5", () => {
-  post_to_channel(channel.sales, group.sales, m_sales),
+  post_to_channel(channel.sales, group.sales, m_sales)
   console.log("*running cron sales*")
-},null, true, 'Europe/Berlin');
+},null, true, 'Europe/Berlin')
 
 
 // cron Customer Success
-const cron_customer_success = new cron("45 13 * * 5", () => {
-  post_to_channel(channel.customer_success, group.customer_success, m_customer_success),
+const cron_customerSuccess = new cron("45 13 * * 5", () => {
+  post_to_channel(channel.customerSuccess, group.customerSuccess, m_customerSuccess)
   console.log("*running cron customer success*")
-},null, true, 'Europe/Berlin');
+},null, true, 'Europe/Berlin')
 
+  // starting the app
+async function startApp() {
+  await app.start(process.env.PORT || 3000)
+  console.log('⚡️ Bolt app is running!')
+}
 
-(async () => {
-  // Start your app
-  await app.start(process.env.PORT || 3000);
-  console.log('⚡️ Bolt app is running!');
-})();
+//start
+startApp()
+
+post_to_channel(channel.luca_test, group.customerSuccess, m_customerSuccess)
