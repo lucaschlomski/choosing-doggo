@@ -26,10 +26,10 @@ const group = {
 
 // return random username from selcted usergroup and check their slack presence
 async function find_lucky_one(userGroup) {
-  const userList = await app.client.usergroups.users.list({
+  let userList = await app.client.usergroups.users.list({
     usergroup: userGroup
   })
-  const presence = await Promise.all(userList.users.map(async (element) => {
+  let presence = await Promise.all(userList.users.map(async (element) => {
     var currentPresence =  await app.client.users.getPresence({
       user: element
     })
@@ -38,11 +38,11 @@ async function find_lucky_one(userGroup) {
       presence: currentPresence.presence
     }
   }))
-  const filteredUserList = presence.filter(element => {
+  let filteredUserList = presence.filter(element => {
     return element.presence !== "away"
   })
-  const random = Math.floor(Math.random() * filteredUserList.length)
-  const result = await app.client.users.info({
+  let random = Math.floor(Math.random() * filteredUserList.length)
+  let result = await app.client.users.info({
     user: filteredUserList[random].user
   })
   return lucky_one = {
@@ -54,7 +54,7 @@ async function find_lucky_one(userGroup) {
 
 // post message
 async function send_message(channel_id, userGroup, message) {
-  const lucky_one = await find_lucky_one(userGroup)
+  let lucky_one = await find_lucky_one(userGroup)
   message[0].fields[0].text += `<@${lucky_one.id}>`
   message[0].accessory.image_url = lucky_one.image
   app.client.chat.postMessage({
@@ -66,7 +66,7 @@ async function send_message(channel_id, userGroup, message) {
 
 // update message
 async function update_message(userGroup, message, message_channel, message_ts) {
-  const lucky_one = await find_lucky_one(userGroup)
+  let lucky_one = await find_lucky_one(userGroup)
   var check = message[0].fields[0].text.charAt(4)
   if( check == "~" ) {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.id}>`
