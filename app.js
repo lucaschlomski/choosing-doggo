@@ -53,7 +53,7 @@ async function find_lucky_one(userGroup) {
 }
 
 // post message
-async function post_to_channel(channel_id, userGroup, message) {
+async function send_message(channel_id, userGroup, message) {
   const lucky_one = await find_lucky_one(userGroup)
   message[0].fields[0].text += `<@${lucky_one.id}>`
   message[0].accessory.image_url = lucky_one.image
@@ -96,14 +96,14 @@ app.action("customerSuccess_button", async ({ack, body}) => {
 
 // cron Sales
 const cron_sales = new cron("45 13 * * 5", () => {
-  post_to_channel(channel.sales, group.sales, m_sales)
+  send_message(channel.sales, group.sales, m_sales)
   console.log("*running cron sales*")
 },null, true, 'Europe/Berlin')
 
 
 // cron Customer Success
 const cron_customerSuccess = new cron("45 13 * * 5", () => {
-  post_to_channel(channel.customerSuccess, group.customerSuccess, m_customerSuccess)
+  send_message(channel.customerSuccess, group.customerSuccess, m_customerSuccess)
   console.log("*running cron customer success*")
 },null, true, 'Europe/Berlin')
 
@@ -116,4 +116,4 @@ async function startApp() {
 //start
 startApp()
 
-post_to_channel(channel.testLuca, group.customerSuccess, m_customerSuccess)
+send_message(channel.testLuca, group.customerSuccess, m_customerSuccess)
