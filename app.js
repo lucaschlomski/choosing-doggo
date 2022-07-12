@@ -11,7 +11,7 @@ const app = new App({
 
 // array of channel IDs
 const channel = {
-  luca_test: "GQVLQ43A8",
+  testLuca: "GQVLQ43A8",
   sales: "CF5G5BPJN",
   customerSuccess: "C026T9RKNCQ",
   marketing: "SJ5U3K2DC"
@@ -107,7 +107,7 @@ const cron_customerSuccess = new cron("45 13 * * 5", () => {
   console.log("*running cron customer success*")
 },null, true, 'Europe/Berlin')
 
-  // starting the app
+// starting the app
 async function startApp() {
   await app.start(process.env.PORT || 3000)
   console.log('⚡️ Bolt app is running!')
@@ -116,4 +116,4 @@ async function startApp() {
 //start
 startApp()
 
-post_to_channel(channel.luca_test, group.customerSuccess, m_customerSuccess)
+post_to_channel(channel.testLuca, group.customerSuccess, m_customerSuccess)
