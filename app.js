@@ -107,6 +107,13 @@ const cron_customerSuccess = new cron("45 13 * * 5", () => {
   console.log("*running cron customer success*")
 },null, true, 'Europe/Berlin')
 
+// slack command tigger
+app.command("/choose", async ({ack, command}) => {
+  await ack()
+  console.log(command)
+  post_to_channel(channel.luca_test, group.customerSuccess, m_customerSuccess)
+})
+
   // starting the app
 async function startApp() {
   await app.start(process.env.PORT || 3000)
@@ -115,5 +122,3 @@ async function startApp() {
 
 //start
 startApp()
-
-post_to_channel(channel.luca_test, group.customerSuccess, m_customerSuccess)
