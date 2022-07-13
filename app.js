@@ -110,7 +110,7 @@ const cron_customerSuccess = new cron("45 13 * * 5", () => {
 // slack command tigger
 app.command("/choose", async ({ack, command}) => {
   await ack()
-  console.log(command.text.substring(command.text.indexOf("ˆ"), command.text.indexOf("|")))
+  console.log(command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|")))
   post_to_channel(command.channel_id, group.customerSuccess, m_customerSuccess)
 })
 
