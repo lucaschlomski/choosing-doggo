@@ -55,7 +55,7 @@ async function find_lucky_one(userGroup) {
 // post message
 async function post_to_channel(channel_id, userGroup, message) {
   const lucky_one = await find_lucky_one(userGroup)
-  message[0].fields[0].text += `<@${lucky_one.id}>`
+  message[0].fields[0].text = `><@${lucky_one.id}>`
   message[0].accessory.image_url = lucky_one.image
   app.client.chat.postMessage({
     channel: channel_id,
@@ -110,14 +110,14 @@ const cron_customerSuccess = new cron("45 13 * * 5", () => {
 // slack command tigger
 app.command("/choose", async ({ack, command}) => {
   await ack()
-  console.log(command)
-  post_to_channel(channel.luca_test, group.customerSuccess, m_customerSuccess)
+  console.log(command.text.substring(command.text.indexOf("ˆ"), command.text.indexOf("|")))
+  post_to_channel(command.channel_id, group.customerSuccess, m_customerSuccess)
 })
 
   // starting the app
 async function startApp() {
   await app.start(process.env.PORT || 3000)
-  console.log('⚡️ Bolt app is running!')
+  console.log('⚡️ who-has-to is up and running!')
 }
 
 //start
