@@ -6,7 +6,9 @@ const cron = require("cron").CronJob
 // initializes the app with your bot token and signing secret
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  appToken: process.env.SLACK_APP_TOKEN,
+  socketMode: true 
 })
 
 // array of channel IDs
@@ -53,9 +55,9 @@ async function find_lucky_one(userGroup) {
 }
 
 // post message
-async function send_message(channel_id, userGroup, message) {
-  let lucky_one = await find_lucky_one(userGroup)
-  message[0].fields[0].text += `<@${lucky_one.id}>`
+async function post_to_channel(channel_id, userGroup, message) {
+  const lucky_one = await find_lucky_one(userGroup)
+  message[0].fields[0].text = `><@${lucky_one.id}>`
   message[0].accessory.image_url = lucky_one.image
   app.client.chat.postMessage({
     channel: channel_id,
@@ -94,6 +96,7 @@ app.action("customerSuccess_button", async ({ack, body}) => {
   update_message(group.customerSuccess, body.message.blocks, body.container.channel_id, body.container.message_ts)
 })
 
+
 // cron Sales
 const cron_sales = new cron("45 13 * * 5", () => {
   send_message(channel.sales, group.sales, m_sales)
@@ -107,15 +110,26 @@ const cron_customerSuccess = new cron("45 13 * * 5", () => {
   console.log("*running cron customer success*")
 },null, true, 'Europe/Berlin')
 
+
+// slack command tigger
 app.command("/choose", async ({ack, command}) => {
   await ack()
-  console.log(command)
+  let groupId = await command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|"))
+  let validation = await app.client.usergroups.users.list({
+    usergroup: groupId
+  })
+  if (validation.ok = true) {
+    post_to_channel(command.channel_id, groupId, m_customerSuccess)
+  } else {
+    console.log("input not valid")
+  }
 })
 
-// starting the app
+
+  // starting the app
 async function startApp() {
   await app.start(process.env.PORT || 3000)
-  console.log('⚡️ Bolt app is running!')
+  console.log('⚡️ who-has-to is up and running!')
 }
 
 //start
