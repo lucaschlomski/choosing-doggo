@@ -111,12 +111,14 @@ const cron_customerSuccess = new cron("45 13 * * 5", () => {
 app.command("/choose", async ({ack, command}) => {
   await ack()
   console.log(command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|")))
-  let groupId = command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|"))
+  let groupId = await command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|"))
   let validation = await app.client.usergroups.users.list({
     usergroup: groupId
   })
   if (validation.ok == "true") {
     post_to_channel(command.channel_id, groupId, m_customerSuccess)
+  } else {
+    console.log("input not valid")
   }
 })
 
