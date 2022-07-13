@@ -6,7 +6,9 @@ const cron = require("cron").CronJob
 // initializes the app with your bot token and signing secret
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  appToken: process.env.SLACK_APP_TOKEN,
+  socketMode: true 
 })
 
 // array of channel IDs
@@ -110,12 +112,11 @@ const cron_customerSuccess = new cron("45 13 * * 5", () => {
 // slack command tigger
 app.command("/choose", async ({ack, command}) => {
   await ack()
-  console.log(command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|")))
   let groupId = await command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|"))
   let validation = await app.client.usergroups.users.list({
     usergroup: groupId
   })
-  if (validation.ok == "true") {
+  if (validation.ok = true) {
     post_to_channel(command.channel_id, groupId, m_customerSuccess)
   } else {
     console.log("input not valid")
