@@ -31,40 +31,56 @@ const group = {
 
 
 // return random username from selcted usergroup and check their slack presence
-async function find_lucky_one(userGroup) {
+async function find_lucky_one(userGroup, checkPresence) {
   let userList = await app.client.usergroups.users.list({
     usergroup: userGroup
   })
   let presence = await Promise.all(userList.users.map(async (element) => {
-    var currentPresence =  await app.client.users.getPresence({
+    let userPresence =  await app.client.users.getPresence({
       user: element
     })
     return {
       user: element,
-      presence: currentPresence.presence
+      presence: userPresence.presence
     }
   }))
   let filteredUserList = presence.filter(element => {
     return element.presence !== "away"
   })
-  let random = Math.floor(Math.random() * filteredUserList.length)
-  let result = await app.client.users.info({
-    user: filteredUserList[random].user
+  if (filteredUserList == "") {
+    return false
+  }
+  if (checkPresence == "true") {
+    let random = Math.floor(Math.random() * filteredUserList.length)
+    var lucky = filteredUserList[random].user
+  } else {
+    let random = Math.floor(Math.random() * userList.users.length)
+    var lucky = userList.users[random]
+  }
+  let userInfo = await app.client.users.info({
+    user: lucky
   })
-  return lucky_one = {
-    id: result.user.id,
-    real_name: result.user.real_name,
-    image: result.user.profile.image_192
+  return {
+    id: userInfo.user.id,
+    real_name: userInfo.user.real_name,
+    image: userInfo.user.profile.image_192,
   }
 }
 
 
 // post message
-async function sendMessage(channel_id, userGroup, message) {
-  const lucky_one = await find_lucky_one(userGroup)
+async function sendMessage(userGroup, checkPresence, message, channel_id) {
+  let lucky_one = await find_lucky_one(userGroup, checkPresence)
+  if (lucky_one == false) {
+    app.client.chat.postMessage({
+      channel: channel_id,
+      text: `_In the selceted usergroup is currently no one online - try again without the "online" flag._`
+    })
+    return
+  }
   message[0].fields[0].text = `><@${lucky_one.id}>`
   message[0].accessory.image_url = lucky_one.image
-  message[1].accessory.value = userGroup
+  message[1].accessory.value = userGroup + ";" + checkPresence
   app.client.chat.postMessage({
     channel: channel_id,
     text: lucky_one.real_name + " was selcted!",
@@ -74,10 +90,9 @@ async function sendMessage(channel_id, userGroup, message) {
 
 
 // update message
-async function updateMessage(userGroup, message, message_channel, message_ts) {
-  let lucky_one = await find_lucky_one(userGroup)
-  var check = message[0].fields[0].text.charAt(4)
-  if( check == "~" ) {
+async function updateMessage(userGroup, checkPresence, message, message_channel, message_ts) {
+  let lucky_one = await find_lucky_one(userGroup, checkPresence)
+  if( message[0].fields[0].text.charAt(4) == "~" ) {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.id}>`
   } else {
     message[0].fields[0].text = message[0].fields[0].text.slice(0, 4) + "~" + message[0].fields[0].text.slice(4) + "~ " + `<@${lucky_one.id}>`
@@ -95,20 +110,22 @@ async function updateMessage(userGroup, message, message_channel, message_ts) {
 // action reroll button
 app.action("reroll_button", async ({ack, body}) => {
   await ack()
-  updateMessage(body.actions[0].value, body.message.blocks, body.container.channel_id, body.container.message_ts)
+  let groupId = body.actions[0].value.substring(0, body.actions[0].value.indexOf(";"))
+  let checkPresence = body.actions[0].value.substring(body.actions[0].value.indexOf(";") + 1)
+  updateMessage(groupId, checkPresence, body.message.blocks, body.container.channel_id, body.container.message_ts)
 })
 
 
 // cron Sales
-const cron_sales = new cron("03 16 * * 3", () => {
-  sendMessage(channel.testLuca, group.sales, m_sales)
+const cron_sales = new cron("45 13 * * 5", () => {
+  sendMessage(group.sales, true,  m_sales, channel.testLuca)
   console.log("*running cron sales*")
 },null, true, 'Europe/Berlin')
 
 
 // cron Customer Success
-const cron_customerSuccess = new cron("04 16 * * 3", () => {
-  sendMessage(channel.testLuca, group.customerSuccess, m_customerSuccess)
+const cron_customerSuccess = new cron("45 13 * * 5", () => {
+  sendMessage(group.customerSuccess, true, m_customerSuccess, channel.testLuca)
   console.log("*running cron customer success*")
 },null, true, 'Europe/Berlin')
 
@@ -116,12 +133,17 @@ const cron_customerSuccess = new cron("04 16 * * 3", () => {
 // slack command tigger
 app.command("/choose", async ({ack, command}) => {
   await ack()
-  let groupId = await command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|"))
+  let groupId = command.text.substring(command.text.indexOf("^") + 1, command.text.indexOf("|"))
   let validation = await app.client.usergroups.users.list({
     usergroup: groupId
   })
+  if (command.text.substring(command.text.indexOf(" ") + 1) == "online") {
+    var checkPresence = "true"
+  } else {
+    var checkPresence = "false"
+  }
   if (validation.ok = true) {
-    sendMessage(command.channel_id, groupId, m_generic)
+    sendMessage(groupId, checkPresence, m_generic, command.channel_id)
   } else {
     console.log("input not valid")
   }
