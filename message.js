@@ -3,7 +3,7 @@ m_sales = [
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "*Die Sales Zusammenfassung für das Wochenabschlussmeeting übernimmt heute:*"
+            "text": "*Die Sales Zusammenfassung für das Wochenabschlussmeeting übernimmt diese Woche:*"
         },
         "accessory": {
             "type": "image",
@@ -30,7 +30,7 @@ m_sales = [
                 "text": "pick someone else",
                 "emoji": true
             },
-            "action_id": "sales_button"
+            "action_id": "reroll_button"
         }
     }
 ];
@@ -40,7 +40,7 @@ m_customerSuccess = [
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "*Die Customer Success Zusammenfassung für das Wochenabschlussmeeting übernimmt heute:*"
+            "text": "*Die Customer Success Zusammenfassung für das Wochenabschlussmeeting übernimmt diese Woche:*"
         },
         "accessory": {
             "type": "image",
@@ -67,7 +67,44 @@ m_customerSuccess = [
                 "text": "pick someone else",
                 "emoji": true
             },
-            "action_id": "customerSuccess_button"
+            "action_id": "reroll_button"
+        }
+    }
+];
+
+m_generic = [
+    {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "*Pluto hat nach intensivem Nachdenken eine Entscheidung getroffen...*\n*Ausgwählt wurde:*"
+        },
+        "accessory": {
+            "type": "image",
+            "image_url": "",
+            "alt_text": "user image"
+        },
+        "fields": [
+            {
+                "type": "mrkdwn",
+                "text": ">"
+            }
+        ]
+    },
+    {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": ":cool-doge:"
+        },
+        "accessory": {
+            "type": "button",
+            "text": {
+                "type": "plain_text",
+                "text": "pick someone else",
+                "emoji": true
+            },
+            "action_id": "reroll_button"
         }
     }
 ];
