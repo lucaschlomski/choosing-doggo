@@ -107,6 +107,11 @@ const cron_customerSuccess = new cron("45 13 * * 5", () => {
   console.log("*running cron customer success*")
 },null, true, 'Europe/Berlin')
 
+app.command("/choose", async ({ack, command}) => {
+  await ack()
+  console.log(command)
+})
+
 // starting the app
 async function startApp() {
   await app.start(process.env.PORT || 3000)
@@ -115,5 +120,3 @@ async function startApp() {
 
 //start
 startApp()
-
-send_message(channel.testLuca, group.customerSuccess, m_customerSuccess)
