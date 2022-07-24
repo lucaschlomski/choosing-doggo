@@ -77,7 +77,7 @@ m_generic = [
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "*Pluto hat nach intensivem Nachdenken eine Entscheidung getroffen!*\n*Ausgwählt wurde:*"
+            "text": "*Pluto hat, nach intensivem Nachdenken, eine Entscheidung getroffen!*\n*Ausgwählt wurde:*"
         },
         "accessory": {
             "type": "image",
