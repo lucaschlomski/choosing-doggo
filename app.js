@@ -80,6 +80,7 @@ async function findLuckyOne(targetType, targetId, checkPresence) {
   }
 }
 
+penis
 
 // post message
 async function sendMessage(targetType, targetId, checkPresence, message, channel_id) {
