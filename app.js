@@ -132,14 +132,14 @@ app.action("reroll_button", async ({ack, body}) => {
 
 
 // cron Sales
-const cron_sales = new cron("0 10 * * 5", () => {
+const cron_sales = new cron("45 9 * * 5", () => {
   sendMessage("@", group.sales, true,  m_sales, channel.sales)
   console.log("*running cron sales*")
 },null, true, 'Europe/Berlin')
 
 
 // cron Customer Success
-const cron_customerSuccess = new cron("0 10 * * 5", () => {
+const cron_customerSuccess = new cron("45 9 * * 5", () => {
   sendMessage("@", group.customerSuccess, true, m_customerSuccess, channel.customerSuccess)
   console.log("*running cron customer success*")
 },null, true, 'Europe/Berlin')
