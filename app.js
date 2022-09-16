@@ -40,6 +40,7 @@ async function fetchUserList(targetType, targetId) {
     let response = await app.client.usergroups.users.list({
       usergroup: targetId
     })
+    console.log(response.users)
     return response.users
   }
 }
