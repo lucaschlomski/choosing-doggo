@@ -72,6 +72,43 @@ m_customerSuccess = [
     }
 ];
 
+m_marketing = [
+    {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "*Die Marketing Zusammenfassung für das Wochenabschlussmeeting übernimmt diese Woche:*"
+        },
+        "accessory": {
+            "type": "image",
+            "image_url": "",
+            "alt_text": "user image"
+        },
+        "fields": [
+            {
+                "type": "mrkdwn",
+                "text": ">"
+            }
+        ]
+    },
+    {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "*Links:* <https://www.youtube.com/watch?v=dQw4w9WgXcQ|Notizen>"
+        },
+        "accessory": {
+            "type": "button",
+            "text": {
+                "type": "plain_text",
+                "text": "pick someone else",
+                "emoji": true
+            },
+            "action_id": "reroll_button"
+        }
+    }
+];
+
 m_generic = [
     {
         "type": "section",

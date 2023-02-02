@@ -26,7 +26,8 @@ const channel = {
 const group = {
   sales: "S027JT5CBQW",
   customerSuccess: "S027RRUF1M1",
-  bizDev: "SMY88M352"
+  bizDev: "SMY88M352",
+  marketing: "SJ5U3K2DC"
 }
 
 // fetch list of users
@@ -142,6 +143,12 @@ const cron_sales = new cron("45 9 * * 5", () => {
 const cron_customerSuccess = new cron("45 9 * * 5", () => {
   sendMessage("@", group.customerSuccess, true, m_customerSuccess, channel.customerSuccess)
   console.log("*running cron customer success*")
+},null, true, 'Europe/Berlin')
+
+// cron Marketing
+const cron_marketing = new cron("0 13 * * 5", () => {
+  sendMessage("@", group.marketing, false, m_marketing, channel.marketing)
+  console.log("*running cron marketing*")
 },null, true, 'Europe/Berlin')
 
 
