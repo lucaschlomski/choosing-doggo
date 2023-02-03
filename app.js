@@ -18,7 +18,7 @@ const channel = {
   testLuca: "GQVLQ43A8",
   sales: "CF5G5BPJN",
   customerSuccess: "C026T9RKNCQ",
-  marketing: "SJ5U3K2DC"
+  marketing: "C4H329XMG"
 }
 
 
@@ -41,7 +41,6 @@ async function fetchUserList(targetType, targetId) {
     let response = await app.client.usergroups.users.list({
       usergroup: targetId
     })
-    console.log(response.users)
     return response.users
   }
 }
