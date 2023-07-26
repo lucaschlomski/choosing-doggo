@@ -47,29 +47,39 @@ async function fetchUserList(targetType, targetId) {
 
 
 // return random username from selcted usergroup and check their slack presence
-async function findLuckyOne(targetType, targetId, checkPresence) {
-  let userList = await fetchUserList(targetType, targetId)
-  let presence = await Promise.all(userList.map(async (element) => {
-    let userPresence =  await app.client.users.getPresence({
-      user: element
+async function findLuckyOne(targetType, targetId, checkPresence, exclusion) {
+  let user_list = await fetchUserList(targetType, targetId)
+  if (exclusion != null) {
+    var exclusionFilterd_list = user_list.filter(element => {
+      return !exclusion.includes(element)
     })
-    return {
-      user: element,
-      presence: userPresence.presence
+    if (exclusionFilterd_list == "") {
+      return false
     }
-  }))
-  let filteredUserList = presence.filter(element => {
-    return element.presence !== "away"
-  })
-  if (filteredUserList == "") {
-    return false
+  } else {
+    var exclusionFilterd_list = user_list
   }
   if (checkPresence == "true") {
-    let random = Math.floor(Math.random() * filteredUserList.length)
-    var lucky = filteredUserList[random].user
+    let userStatus_list = await Promise.all(exclusionFilterd_list.map(async (element) => {
+      let userPresence =  await app.client.users.getPresence({
+        user: element
+      })
+      return {
+        user: element,
+        presence: userPresence.presence
+      }
+    }))
+    let presenceFiltered = userStatus_list.filter(element => {
+      return element.presence !== "away"
+    })
+    if (presenceFiltered == "") {
+      return false
+    }
+    let random = Math.floor(Math.random() * presenceFiltered.length)
+    var lucky = presenceFiltered[random].user
   } else {
-    let random = Math.floor(Math.random() * userList.length)
-    var lucky = userList[random]
+    let random = Math.floor(Math.random() * exclusionFilterd_list.length)
+    var lucky = exclusionFilterd_list[random]
   }
   let userInfo = await app.client.users.info({
     user: lucky
@@ -94,7 +104,7 @@ async function sendMessage(targetType, targetId, checkPresence, message, channel
   }
   message[0].fields[0].text = `><@${lucky_one.id}>`
   message[0].accessory.image_url = lucky_one.image
-  message[1].accessory.value = targetType + "-" + targetId + ";" + checkPresence
+  message[2].accessory.value = targetType + "-" + targetId + ";" + checkPresence
   app.client.chat.postMessage({
     channel: channel_id,
     text: lucky_one.real_name + " was selcted!",
@@ -105,19 +115,28 @@ async function sendMessage(targetType, targetId, checkPresence, message, channel
 
 // update message
 async function updateMessage(targetType, targetId, checkPresence, message, message_channel, message_ts) {
-  let lucky_one = await findLuckyOne(targetType, targetId, checkPresence)
-  if( message[0].fields[0].text.charAt(4) == "~" ) {
-    message[0].fields[0].text = message[0].fields[0].text.slice(0, message[0].fields[0].text.lastIndexOf("~")) + message[0].fields[0].text.slice(message[0].fields[0].text.lastIndexOf("~") + 1) + "~ " + `<@${lucky_one.id}>`
+  let excluded_users = message[0].fields[0].text.substring(message[0].fields[0].text.indexOf("<"), message[0].fields[0].text.indexOf(">") + 1) + message[1].elements[0].text.slice(message[1].elements[0].text.indexOf(" "))
+  let lucky_one = await findLuckyOne(targetType, targetId, checkPresence, excluded_users)
+  message[1].elements[0].text += ' ' + message[0].fields[0].text.substring(message[0].fields[0].text.indexOf("<"), message[0].fields[0].text.indexOf(">") + 1)
+  if (lucky_one == false) {
+    message[0].fields[0].text = `><no one could be selcted>`
+    message[0].accessory.image_url = "https://avatars.slack-edge.com/2022-07-13/3790848556245_d0ef796c84106f2ecd20_72.jpg"
+    app.client.chat.update({
+      channel: message_channel,
+      ts: message_ts,
+      text: "no one could be selcted!",
+      blocks: message
+    })
   } else {
-    message[0].fields[0].text = message[0].fields[0].text.slice(0, 4) + "~" + message[0].fields[0].text.slice(4) + "~ " + `<@${lucky_one.id}>`
+    message[0].fields[0].text = `><@${lucky_one.id}>`
+    message[0].accessory.image_url = lucky_one.image
+    app.client.chat.update({
+      channel: message_channel,
+      ts: message_ts,
+      text: lucky_one.real_name + " was selcted!",
+      blocks: message
+    })
   }
-  message[0].accessory.image_url = lucky_one.image
-  app.client.chat.update({
-    channel: message_channel,
-    ts: message_ts,
-    text: lucky_one.real_name + " was selcted!",
-    blocks: message
-  })
 }
 
 
@@ -136,7 +155,6 @@ const cron_sales = new cron("45 9 * * 5", () => {
   sendMessage("@", group.sales, true,  m_sales, channel.sales)
   console.log("*running cron sales*")
 },null, true, 'Europe/Berlin')
-
 
 // cron Customer Success
 const cron_customerSuccess = new cron("45 9 * * 5", () => {

@@ -18,6 +18,15 @@ m_sales = [
         ]
     },
     {
+        "type": "context",
+        "elements": [
+            {
+                "type": "mrkdwn",
+                "text": "*History:*"
+            }
+        ]
+    },
+    {
         "type": "section",
         "text": {
             "type": "mrkdwn",
@@ -51,6 +60,15 @@ m_customerSuccess = [
             {
                 "type": "mrkdwn",
                 "text": ">"
+            }
+        ]
+    },
+    {
+        "type": "context",
+        "elements": [
+            {
+                "type": "mrkdwn",
+                "text": "*History:*"
             }
         ]
     },
@@ -92,6 +110,15 @@ m_marketing = [
         ]
     },
     {
+        "type": "context",
+        "elements": [
+            {
+                "type": "mrkdwn",
+                "text": "*History:*"
+            }
+        ]
+    },
+    {
         "type": "section",
         "text": {
             "type": "mrkdwn",
@@ -129,6 +156,15 @@ m_generic = [
         ]
     },
     {
+        "type": "context",
+        "elements": [
+            {
+                "type": "mrkdwn",
+                "text": "*History:*"
+            }
+        ]
+    },
+    {
         "type": "section",
         "text": {
             "type": "mrkdwn",
@@ -144,4 +180,4 @@ m_generic = [
             "action_id": "reroll_button"
         }
     }
-];
+]
