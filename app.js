@@ -197,7 +197,7 @@ app.command("/choose", async ({ack, command}) => {
 // starting the app
 async function startApp() {
   await app.start(process.env.PORT || 3000)
-  console.log('⚡️ who-has-to is up and running!')
+  console.log('⚡️ choosing-doggo is up and running!')
 }
 
 
