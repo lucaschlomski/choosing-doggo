@@ -1,6 +1,6 @@
 {
   "name": "choosing-doggo",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "@slack/bolt": "^3.12.1",
     "@slack/socket-mode": "^1.3.1",
     "cron": "^2.0.0",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "pg": "^8.11.2"
   }
 }
