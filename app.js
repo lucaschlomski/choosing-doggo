@@ -497,7 +497,7 @@ app.action("target_type_select", async ({ack, body}) => {
 app.command("/choose", async ({ack, command}) => {
   await ack()
   if (command.text == "") {
-    sendMessage("#", command.channel_id, "false", m_generic, command.channel_id)
+    sendMessage("#", command.channel_id, "false", blck.m_generic, command.channel_id)
     return
   }
   if (command.text.substring(command.text.indexOf(" ") + 1) == "online") {
@@ -512,7 +512,7 @@ app.command("/choose", async ({ack, command}) => {
       channel: targetId
     })
     if (validation.ok = true) {
-      sendMessage(targetType, targetId, checkPresence, m_generic, command.channel_id)
+      sendMessage(targetType, targetId, checkPresence, blck.m_generic, command.channel_id)
     } else {
       app.client.chat.postMessage({
         channel: command.channel_id,
@@ -525,7 +525,7 @@ app.command("/choose", async ({ack, command}) => {
       usergroup: targetId
     })
     if (validation.ok = true) {
-      sendMessage(targetType, targetId, checkPresence, m_generic, command.channel_id)
+      sendMessage(targetType, targetId, checkPresence, blck.m_generic, command.channel_id)
     } else {
       app.client.chat.postMessage({
         channel: command.channel_id,
