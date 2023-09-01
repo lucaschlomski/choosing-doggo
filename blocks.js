@@ -1,48 +1,6 @@
-const m_generic = [
-  {
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text: "*Pluto hat, nach intensivem Nachdenken, eine Entscheidung getroffen!*\n*Ausgwählt wurde:*",
-    },
-    accessory: {
-      type: "image",
-      image_url: "",
-      alt_text: "user image",
-    },
-    fields: [
-      {
-        type: "mrkdwn",
-        text: ">",
-      },
-    ],
-  },
-  {
-    type: "context",
-    elements: [
-      {
-        type: "mrkdwn",
-        text: "*History:*",
-      },
-    ],
-  },
-  {
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text: ":cool-doge:",
-    },
-    accessory: {
-      type: "button",
-      text: {
-        type: "plain_text",
-        text: "pick someone else",
-        emoji: true,
-      },
-      action_id: "reroll_button",
-    },
-  },
-];
+const genericHeader = "*Pluto hat, nach intensivem Nachdenken, eine Entscheidung getroffen!*\n*Ausgwählt wurde:*";
+
+const genericNote = ":cool-doge:";
 
 const messageTpl = [
   {
@@ -433,5 +391,6 @@ module.exports = {
   editCron,
   deleteCron,
   cronDeletion,
-  m_generic
+  genericHeader,
+  genericNote,
 };
